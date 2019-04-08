@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.*;
 
 /**
@@ -54,14 +56,19 @@ public class Application {
     }
 
     public static void main(String[] args) {
-        if (args.length >= 3) {
+        List<String> argList = Arrays.asList(args);
+        if (argList.size() >= 3) {
+            String defaultFile = "index.html";
+            if (argList.size() >= 4) {
+                defaultFile = argList.get(3);
+            }
             new Application(
-                    Integer.parseInt(args[0]),
-                    Integer.parseInt(args[1]),
-                    new StaticFileHandler(args[2], args[3])
+                    Integer.parseInt(argList.get(0)),
+                    Integer.parseInt(argList.get(1)),
+                    new StaticFileHandler(argList.get(2), defaultFile)
             );
         } else {
-            logger.warn("Usage: \njava -jar webserver-<version> <port> <workers> <document root>");
+            logger.warn("Usage: \njava -jar build/libs/icoder-1.0.jar <port> <threads> <public-folder> <defaults-to-index.html>");
         }
     }
 }

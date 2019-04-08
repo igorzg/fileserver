@@ -51,5 +51,5 @@ test {
 
 
 task startServer(type: Exec, dependsOn: build) {
-    commandLine "java", "-jar", "build/libs/icoder-1.0.jar", "5000", "10", "public", "index.html"
+    commandLine "java", "-jar", "build/libs/icoder-1.0.jar", "5000", "10", "public"
 }
