@@ -1,0 +1,55 @@
+group 'org.icoder'
+version '1.0'
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = "org.icoder.Application"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile(
+            "org.slf4j:slf4j-log4j12:$slf4jApiVersion",
+    )
+    testCompile(
+            "org.apache.httpcomponents:httpclient:$httpClientVersion",
+            "org.junit.jupiter:junit-jupiter-api:$jupiterApi",
+            "org.junit.jupiter:junit-jupiter-engine:$jupiterApi",
+            "org.junit.platform:junit-platform-runner:$jupiterRunner",
+
+    )
+}
+
+
+jar {
+    baseName = "icoder"
+    version = "1.0"
+    manifest {
+        attributes 'Main-Class': 'org.icoder.Application'
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+test {
+    scanForTestClasses = true
+    include '**/*Test.class'
+    maxParallelForks = 4
+    testLogging {
+        showStandardStreams = true
+        exceptionFormat "full"
+        events = ["started", "passed", "skipped", "failed", "standard_out", "standard_error"]
+        showExceptions = true
+        showStackTraces = true
+    }
+    afterTest { desc, result ->
+        println "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
+    }
+}
+
+
+task startServer(type: Exec, dependsOn: build) {
+    commandLine "java", "-jar", "build/libs/icoder-1.0.jar", "5000", "10", "public", "index.html"
+}

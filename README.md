@@ -1,0 +1,7 @@
+# Requirements 
+
+gradle
+
+```
+gradle build
+```
